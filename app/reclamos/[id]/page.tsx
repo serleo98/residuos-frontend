@@ -1,40 +1,67 @@
-interface Props {
-  params: { id: string };
-}
+"use client";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
-export default function ReclamoDetallePage({ params }: Props) {
-  const { id } = params;
+export default function ReclamoDetalle({ params }: { params: { id: string } }) {
+  const router = useRouter();
+  const [reclamo, setReclamo] = useState<{ id: string; titulo: string; descripcion: string } | null>(null);
+
+  // Simulación: traer datos desde el backend
+  useEffect(() => {
+    // 🔹 Acá hay que traer el reclamo desde la API con fetch(`/api/reclamos/${params.id}`)
+    setReclamo({
+      id: params.id,
+      titulo: `Reclamo ${params.id}`,
+      descripcion: `Aquí iría la información detallada del reclamo ${params.id}, traída desde la base de datos.`,
+    });
+  }, [params.id]);
+
+  const actualizarEstado = async (estado: string) => {
+    try {
+      // 🔹 Llamada al backend para actualizar el estado
+      await fetch(`/api/reclamos/${params.id}/estado`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ estado }),
+      });
+
+      // 🔹 Volver al listado
+      router.push("/reclamos");
+    } catch (error) {
+      console.error("Error actualizando reclamo:", error);
+    }
+  };
+
+  if (!reclamo) return <p>Cargando...</p>;
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow">
-      <h1 className="text-xl font-bold mb-4">📢 Reclamo {id}</h1>
+    <div className="p-6">
+      <h2 className="text-2xl font-bold mb-4">📢 {reclamo.titulo}</h2>
 
-      {/* Información del reclamo */}
-      <div className="mb-4 p-3 border rounded bg-[#EBEDF2]">
-        <p><strong>Descripción:</strong></p>
-        <p>
-          Aquí iría la información detallada del reclamo {id}, traída desde la base de datos.
-        </p>
+      <div className="p-4 bg-gray-100 rounded mb-6">
+        <p className="font-semibold">Descripción:</p>
+        <p>{reclamo.descripcion}</p>
       </div>
 
-      {/* Formulario de estado */}
-      <div className="space-y-4">
-        <textarea
-          placeholder="Descripción del reclamo..."
-          className="w-full p-2 border rounded h-32"
-        ></textarea>
-
-        <div className="flex space-x-4">
-          <button className="bg-[#260101] text-white px-4 py-2 rounded hover:bg-red-800">
-            EN CURSO
-          </button>
-          <button className="bg-[#260101] text-white px-4 py-2 rounded hover:bg-red-800">
-            TERMINADO
-          </button>
-          <button className="bg-[#260101] text-white px-4 py-2 rounded hover:bg-red-800">
-            RECHAZADO
-          </button>
-        </div>
+      <div className="flex gap-4">
+        <button
+          onClick={() => actualizarEstado("EN_CURSO")}
+          className="bg-[#3a0000] text-white px-4 py-2 rounded"
+        >
+          EN CURSO
+        </button>
+        <button
+          onClick={() => actualizarEstado("TERMINADO")}
+          className="bg-[#3a0000] text-white px-4 py-2 rounded"
+        >
+          TERMINADO
+        </button>
+        <button
+          onClick={() => actualizarEstado("RECHAZADO")}
+          className="bg-[#3a0000] text-white px-4 py-2 rounded"
+        >
+          RECHAZADO
+        </button>
       </div>
     </div>
   );
