@@ -1,29 +1,23 @@
-const reclamos = [
-  { id: 1, titulo: "Reclamo 1" },
-  { id: 2, titulo: "Reclamo 2" },
-  { id: 3, titulo: "Reclamo 3" },
-  { id: 4, titulo: "Reclamo 4" },
-  { id: 5, titulo: "Reclamo 5" },
-];
+"use client";
+import Link from "next/link";
 
 export default function ReclamosPage() {
-  return (
-    <div className="bg-white p-6 rounded-lg shadow">
-      <h1 className="text-xl font-bold mb-6">📢 Listado de Reclamos</h1>
+  const reclamos = [
+    { id: 1, titulo: "Reclamo 1" },
+    { id: 2, titulo: "Reclamo 2" },
+    { id: 3, titulo: "Reclamo 3" },
+  ];
 
-      <ul className="space-y-3">
-        {reclamos.map((reclamo) => (
-          <li
-            key={reclamo.id}
-            className="flex justify-between items-center p-3 border rounded bg-[#EBEDF2]"
-          >
-            <span>{reclamo.titulo}</span>
-            <a
-              href={`/reclamos/${reclamo.id}`}
-              className="bg-[#260101] text-white px-3 py-1 rounded hover:bg-red-800"
-            >
-              Ver
-            </a>
+  return (
+    <div className="p-6">
+      <h2 className="text-2xl font-bold mb-4">📢 Reclamos</h2>
+      <ul className="space-y-4">
+        {reclamos.map((r) => (
+          <li key={r.id} className="p-4 border rounded bg-gray-50">
+            {/* ✅ USAR Link en vez de <a> */}
+            <Link href={`/reclamos/${r.id}`} className="text-blue-600 hover:underline">
+              {r.titulo}
+            </Link>
           </li>
         ))}
       </ul>
