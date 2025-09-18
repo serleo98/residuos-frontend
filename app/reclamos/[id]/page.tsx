@@ -2,7 +2,14 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-export default function ReclamoDetalle({ params }: { params: { id: string } }) {
+interface PageProps {
+  params: {
+    id: string;
+  };
+  searchParams?: { [key: string]: string | string[] | undefined };
+}
+
+export default function ReclamoDetalle({ params }: PageProps) {
   const router = useRouter();
   const [reclamo, setReclamo] = useState<{ id: string; titulo: string; descripcion: string } | null>(null);
 
