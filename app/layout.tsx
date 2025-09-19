@@ -1,4 +1,5 @@
 import "./globals.css";
+import Link from "next/link";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -8,11 +9,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <aside className="w-64 bg-[#C9DBF2] p-4 flex flex-col border-r border-gray-300">
           <h2 className="text-lg font-bold text-[#260101] mb-6">♻️ Residuos</h2>
           <nav className="space-y-2">
-            <a href="/empleado" className="block hover:bg-[#828CA0] p-2 rounded">👷 Empleado</a>
-            <a href="/tachos" className="block hover:bg-[#828CA0] p-2 rounded">🗑️ Tachos</a>
-            <a href="/emergencias" className="block hover:bg-[#828CA0] p-2 rounded">🚨 Emergencias</a>
-            <a href="/horarios" className="block hover:bg-[#828CA0] p-2 rounded">⏰ Horarios</a>
-            <a href="/reclamos" className="block hover:bg-[#828CA0] p-2 rounded">📢 Reclamos</a>
+            <Link href="/empleado" className="block hover:bg-[#828CA0] p-2 rounded">👷 Empleado</Link>
+            <Link href="/tachos" className="block hover:bg-[#828CA0] p-2 rounded">🗑️ Tachos</Link>
+            <Link href="/emergencias" className="block hover:bg-[#828CA0] p-2 rounded">🚨 Emergencias</Link>
+            <Link href="/horarios" className="block hover:bg-[#828CA0] p-2 rounded">⏰ Horarios</Link>
+            <Link href="/reclamos" className="block hover:bg-[#828CA0] p-2 rounded">📢 Reclamos</Link>
           </nav>
         </aside>
 
@@ -22,8 +23,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <header className="bg-[#260101] text-white p-4 flex justify-between items-center shadow">
             <h1 className="text-lg font-bold">CityPass+ – Residuos</h1>
             <nav className="space-x-4">
-              <a href="#" className="hover:underline">⚙️ Configuración</a>
-              <a href="#" className="hover:underline">📊 Otros módulos</a>
+              <Link href="#" className="hover:underline">⚙️ Configuración</Link>
+              <Link href="#" className="hover:underline">📊 Otros módulos</Link>
             </nav>
           </header>
 
