@@ -1,12 +1,12 @@
-import "./globals.css";
 import Link from "next/link";
+import "./globals.css";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es">
-      <body className="flex min-h-screen bg-[#EBEDF2]">
+      <body className="flex min-h-screen bg-[#03A64A]">
         {/* Sidebar izquierda */}
-        <aside className="w-64 bg-[#C9DBF2] p-4 flex flex-col border-r border-gray-300">
+        <aside className="w-64 bg-green-500 p-4 flex flex-col border-r border-gray-300">
           <h2 className="text-lg font-bold text-[#260101] mb-6">♻️ Residuos</h2>
           <nav className="space-y-2">
             <Link href="/empleado" className="block hover:bg-[#828CA0] p-2 rounded">👷 Empleado</Link>
