@@ -2,7 +2,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export default function LoginPage() {
+export default function EmpleadoPage() {
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -12,6 +12,16 @@ export default function LoginPage() {
     { user: "empleado1", pass: "1234" },
     { user: "empleado2", pass: "1234" },
     { user: "admin", pass: "admin" },
+    { user: "eze@example.com", pass: "1234" },
+    { user: "leo@example.com", pass: "1234" },
+    { user: "juan@example.com", pass: "1234" },
+    { user: "sergio@example.com", pass: "1234" },
+    { user: "fede@example.com", pass: "1234" },
+    { user: "gonza@example.com", pass: "1234" },
+    { user: "maria@example.com", pass: "1234" },
+    { user: "lucia@example.com", pass: "1234" },
+    { user: "sofia@example.com", pass: "1234" },
+    { user: "camila@example.com", pass: "1234" },
   ];
 
   const handleLogin = (e: React.FormEvent) => {

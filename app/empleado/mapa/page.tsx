@@ -14,35 +14,79 @@ const containerStyle = {
   height: "500px",
 };
 
+interface Point {
+  id: number;
+  lat: number;
+  lng: number;
+}
+
+interface RouteSegment {
+  from: number;
+  to: number;
+  points: { lat: number; lng: number }[];
+  distance: number;
+  time: number;
+}
+
 export default function MapaPage() {
   const router = useRouter();
-  const [points, setPoints] = useState<{ id: number; lat: number; lng: number }[]>([]);
+  const [points, setPoints] = useState<Point[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [user, setUser] = useState<string | null>(null);
-
+  const [routeSegments, setRouteSegments] = useState<RouteSegment[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  
+  // Estado para almacenar el nombre de usuario
+  const [username, setUsername] = useState<string | null>(null);
+  
   // 🔹 Validación de login antes de mostrar mapa
   useEffect(() => {
     const loggedUser = localStorage.getItem("user");
     if (!loggedUser) {
-      router.push("/login"); // Si no hay login -> redirige
+      router.push("/empleado"); // Si no hay login -> redirige a la página de login
     } else {
-      setUser(loggedUser);
+      setUsername(loggedUser);
     }
   }, [router]);
 
   // 🔹 Cargar ruta desde backend
   useEffect(() => {
-    const fetchRoute = async () => {
+    // Solo hacemos la petición cuando tengamos el nombre de usuario
+    if (!username) return;
+    
+    const fetchData = async () => {
+      setIsLoading(true);
       try {
-        const res = await fetch("https://integraciondeaplicaciones2.onrender.com/ruta-optima/1");
-        const data = await res.json();
-        setPoints(data);
+        // Obtener los puntos de la ruta usando el usuario directamente en la URL
+        const resPoints = await fetch(`/api/ruta-optima/${username}`);
+        const dataPoints = await resPoints.json();
+        setPoints(dataPoints);
+
+        if (dataPoints.length > 1) {
+          // Obtener las rutas detalladas entre los puntos
+          const resRoute = await fetch("/api/ruta-detallada", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(dataPoints),
+          });
+
+          if (!resRoute.ok) {
+            throw new Error("Error al obtener la ruta detallada");
+          }
+
+          const routeData = await resRoute.json();
+          setRouteSegments(routeData);
+        }
       } catch (err) {
-        console.error("Error cargando ruta:", err);
+        console.error("Error cargando datos:", err);
+      } finally {
+        setIsLoading(false);
       }
     };
-    fetchRoute();
-  }, []);
+
+    fetchData();
+  }, [username]);
 
   const handleNext = () => {
     if (currentIndex < points.length - 1) {
@@ -56,61 +100,79 @@ export default function MapaPage() {
 
   const handleLogout = () => {
     localStorage.removeItem("user");
-    router.push("/login");
+    router.push("/empleado");
+  };
+
+  // Función para obtener todos los puntos de la ruta hasta el índice actual
+  const getRoutePointsUpToIndex = (index: number) => {
+    if (routeSegments.length === 0) return [];
+    
+    let allPoints: { lat: number; lng: number }[] = [];
+    
+    // Añadir cada segmento de ruta hasta el índice actual
+    for (let i = 0; i < index; i++) {
+      const segment = routeSegments.find(s => s.from === points[i].id && s.to === points[i+1].id);
+      if (segment) {
+        allPoints = [...allPoints, ...segment.points];
+      }
+    }
+    
+    return allPoints;
   };
 
   return (
-    <div className="p-4 h-screen flex flex-col">
-      {/* Header con usuario y logout */}
-      <div className="flex justify-between items-center bg-green-700 text-white p-4 rounded-md mb-4">
-        <h1 className="text-xl font-bold">Ruta Óptima 🗺️</h1>
-        <div className="flex items-center gap-4">
-          {user && <span className="italic">👤 {user}</span>}
-          <button
-            onClick={handleLogout}
-            className="bg-red-500 px-3 py-1 rounded hover:bg-red-600"
-          >
-            Cerrar sesión
-          </button>
-        </div>
-      </div>
 
-      {/* Mapa */}
-      <div className="flex-1">
-        <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}>
-          {points.length > 0 && (
-            <GoogleMap
-              mapContainerStyle={containerStyle}
-              center={{
-                lat: points[currentIndex].lat,
-                lng: points[currentIndex].lng,
-              }}
-              zoom={15}
-            >
-              {/* 🔹 Trazo parcial hasta el punto actual */}
+    <div className="p-4">
+      <h1 className="text-xl font-bold mb-4">Ruta Óptima</h1>
+      <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}>
+        {points.length > 0 && !isLoading && (
+          <GoogleMap
+            mapContainerStyle={containerStyle}
+            center={{
+              lat: points[currentIndex].lat,
+              lng: points[currentIndex].lng,
+            }}
+            zoom={15}
+          >
+            {/* Ruta detallada hasta el punto actual */}
+            {routeSegments.length > 0 && (
               <Polyline
-                path={points.slice(0, currentIndex + 1).map((p) => ({ lat: p.lat, lng: p.lng }))}
+                path={getRoutePointsUpToIndex(currentIndex)}
+
                 options={{
                   strokeColor: "#dd7027ff",
                   strokeOpacity: 0.9,
                   strokeWeight: 5,
                 }}
               />
+            )}
 
-              {/* 🔹 Marcador actual */}
+            {/* Todos los puntos como marcadores */}
+            {points.map((point, index) => (
               <Marker
+                key={point.id}
                 position={{
-                  lat: points[currentIndex].lat,
-                  lng: points[currentIndex].lng,
+                  lat: point.lat,
+                  lng: point.lng,
                 }}
-                label={`${currentIndex + 1}`}
+                label={`${index + 1}`}
+                icon={{
+                  url: index === currentIndex 
+                    ? "http://maps.google.com/mapfiles/ms/icons/red-dot.png" 
+                    : "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+                }}
               />
-            </GoogleMap>
-          )}
-        </LoadScript>
-      </div>
+            ))}
+          </GoogleMap>
+        )}
+      </LoadScript>
 
-      {/* Botones de navegación */}
+      {isLoading && (
+        <div className="text-center py-10">
+          <p>Cargando ruta optimizada...</p>
+        </div>
+      )}
+
       <div className="flex gap-4 mt-4">
         <button
           onClick={handleNext}
