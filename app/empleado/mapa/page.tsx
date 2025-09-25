@@ -35,23 +35,29 @@ export default function MapaPage() {
   const [routeSegments, setRouteSegments] = useState<RouteSegment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   
+  // Estado para almacenar el nombre de usuario
+  const [username, setUsername] = useState<string | null>(null);
+  
   // 🔹 Validación de login antes de mostrar mapa
   useEffect(() => {
     const loggedUser = localStorage.getItem("user");
     if (!loggedUser) {
-      router.push("/login"); // Si no hay login -> redirige
+      router.push("/empleado"); // Si no hay login -> redirige a la página de login
     } else {
-      setUser(loggedUser);
+      setUsername(loggedUser);
     }
   }, [router]);
 
   // 🔹 Cargar ruta desde backend
   useEffect(() => {
+    // Solo hacemos la petición cuando tengamos el nombre de usuario
+    if (!username) return;
+    
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        // Obtener los puntos de la ruta
-        const resPoints = await fetch("/api/ruta-optima/1");
+        // Obtener los puntos de la ruta usando el usuario directamente en la URL
+        const resPoints = await fetch(`/api/ruta-optima/${username}`);
         const dataPoints = await resPoints.json();
         setPoints(dataPoints);
 
@@ -80,7 +86,7 @@ export default function MapaPage() {
     };
 
     fetchData();
-  }, []);
+  }, [username]);
 
   const handleNext = () => {
     if (currentIndex < points.length - 1) {
@@ -94,7 +100,7 @@ export default function MapaPage() {
 
   const handleLogout = () => {
     localStorage.removeItem("user");
-    router.push("/login");
+    router.push("/empleado");
   };
 
   // Función para obtener todos los puntos de la ruta hasta el índice actual
