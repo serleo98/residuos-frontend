@@ -34,7 +34,18 @@ export default function MapaPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [routeSegments, setRouteSegments] = useState<RouteSegment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  
+  // 🔹 Validación de login antes de mostrar mapa
+  useEffect(() => {
+    const loggedUser = localStorage.getItem("user");
+    if (!loggedUser) {
+      router.push("/login"); // Si no hay login -> redirige
+    } else {
+      setUser(loggedUser);
+    }
+  }, [router]);
 
+  // 🔹 Cargar ruta desde backend
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
@@ -78,7 +89,12 @@ export default function MapaPage() {
   };
 
   const handleFinish = () => {
-    router.push("/empleado");
+    router.push("/empleado"); // O dashboard final
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    router.push("/login");
   };
 
   // Función para obtener todos los puntos de la ruta hasta el índice actual
@@ -99,6 +115,7 @@ export default function MapaPage() {
   };
 
   return (
+
     <div className="p-4">
       <h1 className="text-xl font-bold mb-4">Ruta Óptima</h1>
       <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}>
@@ -115,6 +132,7 @@ export default function MapaPage() {
             {routeSegments.length > 0 && (
               <Polyline
                 path={getRoutePointsUpToIndex(currentIndex)}
+
                 options={{
                   strokeColor: "#dd7027ff",
                   strokeOpacity: 0.9,
