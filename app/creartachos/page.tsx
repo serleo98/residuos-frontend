@@ -4,11 +4,11 @@ import { useState } from "react";
 
 export default function CrearTachoPage() {
   const [formData, setFormData] = useState({
-    barrio: "",
-    capacidad: "",
-    direccion: "",
-    id_estado: "",
     id_tipo: "",
+    id_estado: "",
+    capacidad: "",
+    barrio: "",
+    direccion: "",
     latitude: "",
     longitude: "",
     prioridad: "",
@@ -40,11 +40,11 @@ export default function CrearTachoPage() {
         setMessage("✅ Tacho creado con éxito");
         // Vaciar el formulario
         setFormData({
-          barrio: "",
-          capacidad: "",
-          direccion: "",
-          id_estado: "",
           id_tipo: "",
+          id_estado: "",
+          capacidad: "",
+          barrio: "",
+          direccion: "",
           latitude: "",
           longitude: "",
           prioridad: "",
