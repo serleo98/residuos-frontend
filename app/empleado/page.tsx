@@ -2,48 +2,65 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export default function EmpleadoLogin() {
-  const [nombre, setNombre] = useState("");
-  const [clave, setClave] = useState("");
+export default function LoginPage() {
   const router = useRouter();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-  const handleLogin = () => {
-    // 🔹 Aquí se debe consultar al backend si hay camiones
-    const hayCamion = Math.random() > 0.5; // Simulación
-    if (hayCamion) {
-      router.push("/empleado/mapa");
+  const users = [
+    { user: "empleado1", pass: "1234" },
+    { user: "empleado2", pass: "1234" },
+    { user: "admin", pass: "admin" },
+  ];
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    const validUser = users.find(
+      (u) => u.user === username && u.pass === password
+    );
+
+    if (validUser) {
+      localStorage.setItem("user", username);
+      router.push("/mapa");
     } else {
-      router.push("/empleado/no-ride");
+      setError("Usuario o contraseña incorrectos");
     }
   };
 
   return (
-    <div className="flex justify-center items-center h-full">
-      <div className="bg-blue-200 p-6 rounded-lg shadow-md w-80">
+    <div className="flex h-screen items-center justify-center bg-gray-100">
+      <form
+        onSubmit={handleLogin}
+        className="bg-white p-6 rounded shadow-md w-80"
+      >
+        <h2 className="text-xl font-bold mb-4">Login</h2>
+
         <input
           type="text"
-          placeholder="Nombre"
-          value={nombre}
-          onChange={(e) => setNombre(e.target.value)}
-          className="w-full mb-3 p-2 border rounded"
+          placeholder="Usuario"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          className="w-full border p-2 mb-3 rounded"
         />
+
         <input
           type="password"
-          placeholder="Clave"
-          value={clave}
-          onChange={(e) => setClave(e.target.value)}
-          className="w-full mb-3 p-2 border rounded"
+          placeholder="Contraseña"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="w-full border p-2 mb-3 rounded"
         />
+
+        {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
+
         <button
-          onClick={handleLogin}
-          className="w-full bg-red-900 text-white py-2 rounded hover:bg-red-700"
+          type="submit"
+          className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700"
         >
           Ingresar
         </button>
-        <p className="text-center text-xs mt-2 text-gray-600 cursor-pointer">
-          Recuperar clave
-        </p>
-      </div>
+      </form>
     </div>
   );
 }
