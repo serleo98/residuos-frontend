@@ -14,6 +14,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Link href="/emergencias" className="block hover:bg-[#828CA0] p-2 rounded">🚨 Emergencias</Link>
             <Link href="/horarios" className="block hover:bg-[#828CA0] p-2 rounded">⏰ Horarios</Link>
             <Link href="/reclamos" className="block hover:bg-[#828CA0] p-2 rounded">📢 Reclamos</Link>
+            <Link href="/creartachos" className="block hover:bg-[#828CA0] p-2 rounded">🗑️ Crear Tachos</Link>
           </nav>
         </aside>
 
