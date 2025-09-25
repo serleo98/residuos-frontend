@@ -22,7 +22,7 @@ export default function LoginPage() {
 
     if (validUser) {
       localStorage.setItem("user", username);
-      router.push("/mapa");
+      router.push("/empleado/mapa");
     } else {
       setError("Usuario o contraseña incorrectos");
     }
