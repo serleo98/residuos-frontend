@@ -27,7 +27,7 @@ export function ReclamoDetalle({ id }: { id: string }) {
       });
 
       // 🔹 Volver al listado
-      router.push("/reclamos");
+      router.push("/admin/reclamos");
     } catch (error) {
       console.error("Error actualizando reclamo:", error);
     }

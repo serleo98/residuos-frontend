@@ -9,6 +9,11 @@ const nextConfig: NextConfig = {
     // ⚠️ Esto ignora los errores de ESLint durante la compilación
     ignoreDuringBuilds: true,
   },
+
+  experimental: {
+    middlewarePrefetch: "flexible",
+  },
+  
 };
 
 export default nextConfig;
