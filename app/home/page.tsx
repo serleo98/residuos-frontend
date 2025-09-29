@@ -40,21 +40,12 @@ export default function HomePage() {
           </button>
 
           <button
-            onClick={() => router.push("/empleado/horarios")}
+            onClick={() => router.push("/horarios")}
             className="block my-2 bg-indigo-500 text-white px-4 py-2 rounded"
           >
             🕒 Horarios de recolección
           </button>
         </>
-      )}
-
-      {user.role === "creador" && (
-        <button
-          onClick={() => router.push("/creador/crear-tacho")}
-          className="block my-2 bg-green-500 text-white px-4 py-2 rounded"
-        >
-          🗑️ Crear Tachos
-        </button>
       )}
 
       {user.role === "admin" && (
@@ -71,6 +62,18 @@ export default function HomePage() {
             className="block my-2 bg-purple-500 text-white px-4 py-2 rounded"
           >
             🗑️ Administración de Tachos
+          </button>
+          <button
+            onClick={() => router.push("/creador/crear-tacho")}
+            className="block my-2 bg-green-500 text-white px-4 py-2 rounded"
+          >
+            🗑️ Crear Tachos
+          </button>
+          <button
+            onClick={() => router.push("/horarios")}
+            className="block my-2 bg-indigo-500 text-white px-4 py-2 rounded"
+          >
+            🕒 Horarios de recolección
           </button>
         </>
       )}

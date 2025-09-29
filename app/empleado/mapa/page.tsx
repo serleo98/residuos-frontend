@@ -95,7 +95,8 @@ export default function MapaPage() {
   };
 
   const handleFinish = () => {
-    router.push("/empleado"); // O dashboard final
+    localStorage.removeItem("user"); // 👈 Borrar sesión
+    router.push("/empleado");        // 👈 Redirigir al login
   };
 
   const handleLogout = () => {

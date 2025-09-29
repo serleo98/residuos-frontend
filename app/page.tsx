@@ -12,7 +12,6 @@ export default function LoginPage() {
   const users = [
     { user: "empleado1", pass: "1234", role: "basurero" },
     { user: "empleado2", pass: "1234", role: "basurero" },
-    { user: "creador", pass: "1234", role: "creador" },
     { user: "admin", pass: "admin", role: "admin" },
     { user: "eze@example.com", pass: "1234", role: "basurero" },
     { user: "leo@example.com", pass: "1234", role: "basurero" },
