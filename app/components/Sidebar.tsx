@@ -3,9 +3,12 @@ import Link from "next/link";
 import { useAuth } from "../AuthContext";
 
 export default function Sidebar() {
-  const { user, logout } = useAuth();
+  const { user, logout, loading } = useAuth();
 
-  // 🔹 mientras no haya usuario logueado, no mostrar nada
+  // 🔹 Espera a que se resuelva la sesión
+  if (loading) return null;
+
+  // 🔹 No hay usuario -> no mostrar nada
   if (!user) return null;
 
   return (
@@ -13,7 +16,6 @@ export default function Sidebar() {
       <h2 className="text-lg font-bold text-[#260101] mb-6">♻️ Residuos</h2>
 
       <nav className="space-y-2 flex-1">
-        {/* 🔹 Opciones para Basurero */}
         {user.role === "basurero" && (
           <>
             <Link href="/empleado/mapa" className="block hover:bg-[#828CA0] p-2 rounded">
@@ -28,7 +30,6 @@ export default function Sidebar() {
           </>
         )}
 
-        {/* 🔹 Opciones para Admin */}
         {user.role === "admin" && (
           <>
             <Link href="/admin/reclamos" className="block hover:bg-[#828CA0] p-2 rounded">
