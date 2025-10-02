@@ -96,12 +96,7 @@ export default function MapaPage() {
 
   const handleFinish = () => {
     localStorage.removeItem("user"); // 👈 Borrar sesión
-    router.push("/empleado");        // 👈 Redirigir al login
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    router.push("/empleado");
+    router.push("/");        // 👈 Redirigir al login
   };
 
   // Función para obtener todos los puntos de la ruta hasta el índice actual
